@@ -22,9 +22,9 @@ using (var scope = app.Services.CreateScope())
     try
     {
         var context = services.GetRequiredService<ApplicationDbContext>();
-        // Đảm bảo DB được khởi tạo / kết nối sẵn sàng
-        context.Database.EnsureCreated();
-        app.Logger.LogInformation(">>> [DB CHECK] Ket noi co so du lieu SQLite thanh cong: {ConnectionString}", connectionString);
+        // Tu dong ap dung Migration tao va dong bo Schema DB (T1-09)
+        context.Database.Migrate();
+        app.Logger.LogInformation(">>> [DB CHECK] Ap dung Migration va ket noi SQLite thanh cong: {ConnectionString}", connectionString);
     }
     catch (Exception ex)
     {
