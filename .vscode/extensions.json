@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csdevkit",
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "qwtel.sqlite-viewer",
+    "rangav.vscode-thunder-client",
+    "eamodio.gitlens",
+    "pkief.material-icon-theme"
+  ]
+}
