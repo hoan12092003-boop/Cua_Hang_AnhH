@@ -65,5 +65,8 @@ namespace CuaHang.Models.Entities
 
         // Danh sách chi tiết đơn hàng có chứa sản phẩm này
         public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
+
+        // Danh sách chi tiết các phiếu nhập hàng của sản phẩm này (T1-08)
+        public virtual ICollection<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; } = new List<ChiTietPhieuNhap>();
     }
 }

@@ -55,5 +55,9 @@ namespace CuaHang.Models.Entities
         // Đơn hàng do nhân viên này xử lý / thu ngân tại POS
         [InverseProperty("NhanVien")]
         public virtual ICollection<DonHang> DonHangsXuLy { get; set; } = new List<DonHang>();
+
+        // Các phiếu nhập kho do người dùng này tạo
+        [InverseProperty("NguoiTao")]
+        public virtual ICollection<PhieuNhapKho> PhieuNhapKhos { get; set; } = new List<PhieuNhapKho>();
     }
 }

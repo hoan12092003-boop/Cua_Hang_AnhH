@@ -15,6 +15,8 @@ namespace CuaHang.Data
         public DbSet<SanPham> SanPhams { get; set; } = null!;
         public DbSet<DonHang> DonHangs { get; set; } = null!;
         public DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; } = null!;
+        public DbSet<PhieuNhapKho> PhieuNhapKhos { get; set; } = null!;
+        public DbSet<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -80,21 +82,18 @@ namespace CuaHang.Data
                 entity.Property(p => p.NgayTao).HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
 
-            // Cấu hình bảng DonHang (Tiêu chí T1-07)
+            // Cấu hình bảng DonHang (T1-07)
             modelBuilder.Entity<DonHang>(entity =>
             {
-                // Mã đơn duy nhất
                 entity.HasIndex(o => o.MaDon)
                       .IsUnique()
                       .HasDatabaseName("IX_DonHangs_MaDon");
 
-                // Khóa ngoại với Khách hàng (NguoiDung)
                 entity.HasOne(o => o.KhachHang)
                       .WithMany(u => u.DonHangsMua)
                       .HasForeignKey(o => o.KhachHangId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                // Khóa ngoại với Nhân viên (NguoiDung)
                 entity.HasOne(o => o.NhanVien)
                       .WithMany(u => u.DonHangsXuLy)
                       .HasForeignKey(o => o.NhanVienId)
@@ -116,16 +115,14 @@ namespace CuaHang.Data
                 entity.Property(o => o.NgayTao).HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
 
-            // Cấu hình bảng ChiTietDonHang (Tiêu chí T1-07)
+            // Cấu hình bảng ChiTietDonHang (T1-07)
             modelBuilder.Entity<ChiTietDonHang>(entity =>
             {
-                // Khóa ngoại liên kết DonHang (Xóa đơn thì cascade xóa chi tiết đơn)
                 entity.HasOne(d => d.DonHang)
                       .WithMany(o => o.ChiTietDonHangs)
                       .HasForeignKey(d => d.DonHangId)
                       .OnDelete(DeleteBehavior.Cascade);
 
-                // Khóa ngoại liên kết SanPham (Chặn xóa sản phẩm khi đã có trong chi tiết đơn hàng)
                 entity.HasOne(d => d.SanPham)
                       .WithMany(p => p.ChiTietDonHangs)
                       .HasForeignKey(d => d.SanPhamId)
@@ -141,6 +138,56 @@ namespace CuaHang.Data
                 entity.Property(d => d.SoLuong).HasDefaultValue(1);
                 entity.Property(d => d.DonGia).HasDefaultValue(0m);
                 entity.Property(d => d.ThanhTien).HasDefaultValue(0m);
+            });
+
+            // Cấu hình bảng PhieuNhapKho (Tiêu chí T1-08)
+            modelBuilder.Entity<PhieuNhapKho>(entity =>
+            {
+                // Mã phiếu nhập duy nhất để truy vết từng lô/phiếu
+                entity.HasIndex(p => p.MaPhieu)
+                      .IsUnique()
+                      .HasDatabaseName("IX_PhieuNhapKhos_MaPhieu");
+
+                // Khóa ngoại liên kết người tạo phiếu (NguoiDung)
+                entity.HasOne(p => p.NguoiTao)
+                      .WithMany(u => u.PhieuNhapKhos)
+                      .HasForeignKey(p => p.NguoiTaoId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.ToTable("PhieuNhapKhos", t =>
+                {
+                    t.HasCheckConstraint("CK_PhieuNhapKhos_TongTienNhap", "[TongTienNhap] >= 0");
+                });
+
+                entity.Property(p => p.TongTienNhap).HasDefaultValue(0m);
+                entity.Property(p => p.NgayNhap).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            // Cấu hình bảng ChiTietPhieuNhap (Tiêu chí T1-08)
+            modelBuilder.Entity<ChiTietPhieuNhap>(entity =>
+            {
+                // Khóa ngoại liên kết PhieuNhapKho (Xóa phiếu thì cascade xóa chi tiết phiếu)
+                entity.HasOne(c => c.PhieuNhap)
+                      .WithMany(p => p.ChiTietPhieuNhaps)
+                      .HasForeignKey(c => c.PhieuNhapId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                // Khóa ngoại liên kết SanPham (Chặn xóa sản phẩm khi đã có lịch sử nhập kho)
+                entity.HasOne(c => c.SanPham)
+                      .WithMany(p => p.ChiTietPhieuNhaps)
+                      .HasForeignKey(c => c.SanPhamId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.ToTable("ChiTietPhieuNhaps", t =>
+                {
+                    t.HasCheckConstraint("CK_ChiTietPhieuNhaps_SoLuong", "[SoLuong] >= 1");
+                    t.HasCheckConstraint("CK_ChiTietPhieuNhaps_GiaNhap", "[GiaNhap] >= 0");
+                    t.HasCheckConstraint("CK_ChiTietPhieuNhaps_ThanhTien", "[ThanhTien] >= 0");
+                });
+
+                entity.Property(c => c.SoLuong).HasDefaultValue(1);
+                entity.Property(c => c.GiaNhap).HasDefaultValue(0m);
+                entity.Property(c => c.ThanhTien).HasDefaultValue(0m);
             });
         }
     }
