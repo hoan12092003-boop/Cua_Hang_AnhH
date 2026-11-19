@@ -1,0 +1,23 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Visual Studio / VS Code
+.vs/
+*.user
+*.userosscache
+*.suo
+.DS_Store
+
+# Database & secrets
+*.db
+*.db-shm
+*.db-wal
+.env
+.env.*
+
+# Node (if any)
+node_modules/
+npm-debug.log
