@@ -23,5 +23,10 @@ namespace CuaHang.Models.Entities
         public bool HoatDong { get; set; } = true;
 
         public DateTime NgayTao { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// Danh sách sản phẩm thuộc danh mục này
+        /// </summary>
+        public virtual ICollection<SanPham> SanPhams { get; set; } = new List<SanPham>();
     }
 }
