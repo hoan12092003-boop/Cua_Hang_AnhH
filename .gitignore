@@ -3,6 +3,7 @@
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+TestResults/
 
 # Visual Studio / VS Code
 .vs/
@@ -10,14 +11,28 @@
 *.userosscache
 *.suo
 .DS_Store
+Thumbs.db
 
-# Database & secrets
+# Database & SQLite files (DoD: *.db)
 *.db
 *.db-shm
 *.db-wal
+*.sqlite
+*.sqlite3
+
+# Environment variables & Secrets (DoD: Khong day secret len GitHub)
 .env
 .env.*
+appsettings*.secrets.json
+appsettings.Production.json
 
-# Node (if any)
+# Node & package manager (if any)
 node_modules/
-npm-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Auto-generated backup files
+*.bak
+*.tmp
