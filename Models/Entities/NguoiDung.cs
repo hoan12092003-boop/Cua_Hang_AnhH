@@ -47,5 +47,13 @@ namespace CuaHang.Models.Entities
         public bool TrangThai { get; set; } = true;
 
         public DateTime NgayTao { get; set; } = DateTime.UtcNow;
+
+        // Đơn hàng khách đã đặt
+        [InverseProperty("KhachHang")]
+        public virtual ICollection<DonHang> DonHangsMua { get; set; } = new List<DonHang>();
+
+        // Đơn hàng do nhân viên này xử lý / thu ngân tại POS
+        [InverseProperty("NhanVien")]
+        public virtual ICollection<DonHang> DonHangsXuLy { get; set; } = new List<DonHang>();
     }
 }

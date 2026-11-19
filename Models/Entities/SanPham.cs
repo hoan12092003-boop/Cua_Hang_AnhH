@@ -62,5 +62,8 @@ namespace CuaHang.Models.Entities
         public decimal GiaSauGiam => GiamGiaPhanTram > 0 
             ? GiaBan * (100 - GiamGiaPhanTram) / 100m 
             : GiaBan;
+
+        // Danh sách chi tiết đơn hàng có chứa sản phẩm này
+        public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
     }
 }
