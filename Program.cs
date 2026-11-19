@@ -24,7 +24,12 @@ using (var scope = app.Services.CreateScope())
         var context = services.GetRequiredService<ApplicationDbContext>();
         // Tu dong ap dung Migration tao va dong bo Schema DB (T1-09)
         context.Database.Migrate();
+
+        // Tu dong nap du lieu mau day du cho he thong (T1-10)
+        DbInitializer.Initialize(context);
+
         app.Logger.LogInformation(">>> [DB CHECK] Ap dung Migration va ket noi SQLite thanh cong: {ConnectionString}", connectionString);
+        app.Logger.LogInformation(">>> [DB SEED] Khoi tao du lieu mau Seed Data thanh cong (3 Users, 6 Danh muc, 24 San pham)!");
     }
     catch (Exception ex)
     {
